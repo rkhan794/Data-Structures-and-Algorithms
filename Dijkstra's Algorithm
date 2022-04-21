@@ -1,0 +1,21 @@
+def dijkstra(self, graph, start):
+        let vertex_count = graph.len()
+        let distance = [vertex_count * 2; vertex_count]
+        let previous = [None; vertex_count]
+        distance[start] = 0
+        let done = HashTable(vertex_count, make_sbox_hash())
+        let todo = BinHeap(vertex_count, λ x, y: x[1] < y[1]) 
+        todo.insert([start, 0])
+        while todo.len() != 0: 
+            let minimum_node = todo.find_min()[0]
+            todo.remove_min()
+            if not done.mem?(minimum_node):
+                done.put(minimum_node, True)
+                let edge = graph.get_adjacent(minimum_node)
+                for i in Cons.to_vec(edge):
+                    let w = graph.get_edge(minimum_node, i)
+                    if w + distance[minimum_node] < distance[i]:
+                        distance[i] = w + distance[minimum_node]
+                        previous[i] = minimum_node
+                        todo.insert([i, distance[i]])
+        return [distance, previous]
